@@ -19,5 +19,8 @@
   "homepage": "https://github.com/KDonawa/Testing-Framework-JS#readme",
   "bin": {
     "tme": "index.js"
+  },
+  "dependencies": {
+    "chalk": "^4.1.0"
   }
 }
