@@ -23,7 +23,11 @@ class Runner {
                     console.log('\n', error.message);
                 }
             }
-            require(file.name);
+            try {
+                require(file.name);
+            } catch (error) {
+                console.log(error);
+            }
         }
     }
 
