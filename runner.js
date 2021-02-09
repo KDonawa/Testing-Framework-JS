@@ -11,7 +11,7 @@ class Runner {
     }
 
     async runTests() {
-        for (const file of this.testFiles) {
+        for await (const file of this.testFiles) {
             console.log(chalk.grey(`--- ${file.fileName}`));
             
             global.render = render;
@@ -20,12 +20,12 @@ class Runner {
             global.beforeEach = (func) => {
                 beforeEachList.push(func);
             }
-            
-            global.it = (desc, func) => {
+
+            global.it = async (desc, func) => {
                 beforeEachList.forEach(fn => fn());
                 
                 try {
-                    func();
+                    await func();
                     console.log(chalk.green(`OK - ${desc}`));
                 } catch (error) {
                     console.log(chalk.red(`FAIL - ${desc}`));
