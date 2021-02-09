@@ -1,6 +1,6 @@
 const assert = require('assert');
 
-it('has a text input', async () => {
+it('has a text input (copy)', async () => {
     const dom = await render('index.html');
     const {document} = dom.window;
 

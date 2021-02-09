@@ -11,29 +11,39 @@ class Runner {
     }
 
     async runTests() {
-        for await (const file of this.testFiles) {
+        global.render = render;
+
+        let beforeEachList = [];
+        global.beforeEach = (func) => {
+            beforeEachList.push(func);
+        }
+
+        let itList = [];
+        global.it = async (desc, func) => {
+            itList.push({desc, func});
+        }
+        
+        for (const file of this.testFiles) {
             console.log(chalk.grey(`--- ${file.fileName}`));
+                      
+            beforeEachList = [];
+            itList = [];
             
-            global.render = render;
-
-            const beforeEachList = [];
-            global.beforeEach = (func) => {
-                beforeEachList.push(func);
-            }
-
-            global.it = async (desc, func) => {
-                beforeEachList.forEach(fn => fn());
-                
-                try {
-                    await func();
-                    console.log(chalk.green(`OK - ${desc}`));
-                } catch (error) {
-                    console.log(chalk.red(`FAIL - ${desc}`));
-                    console.log(chalk.red('\n', error.message));
-                }
-            }
             try {
                 require(file.pathName);
+                for (const _it of itList) {                    
+                    beforeEachList.forEach(fn => fn());
+
+                    const {desc, func} = _it;
+                    try {
+                        await func();
+                        console.log(chalk.green(`OK - ${desc}`));
+                    } catch (error) {
+                        console.log(chalk.red(`FAIL - ${desc}`));
+                        console.log(chalk.red('\n', error.message));
+                    }
+                }
+                
             } catch (error) {
                 console.log(error);
             }
