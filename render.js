@@ -1,10 +1,7 @@
 const jsdom = require('jsdom');
 const {JSDOM} = jsdom;
-const path = require('path');
 
-async function render(filename) {
-    const filePath = path.join(process.cwd(), filename);
-
+async function render(filePath) {
     const dom = await JSDOM.fromFile(filePath, {
         runScripts: 'dangerously',
         resources: 'usable',
